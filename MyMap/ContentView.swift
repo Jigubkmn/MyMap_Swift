@@ -20,8 +20,9 @@ struct ContentView: View {
                 // 入力が完了された時
                 .onSubmit {
                   // 入力が完了したので検索キーワードを設定する
-                  displaySearchKey = inputText
+                    displaySearchKey = inputText
                 }
+                .padding()
             // マップを表示。
             MapView(searchKey: displaySearchKey)
         }
