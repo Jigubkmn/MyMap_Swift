@@ -8,12 +8,29 @@
 import SwiftUI
 import MapKit
 
+enum MapType {
+    case standard // 標準
+    case satellite // 衛星写真
+    case hybrid // 衛星写真＋交通機関ラベル
+}
+
 struct MapView: View {
     let searchKey: String
+    let mapType: MapType
     // キーワードから取得した緯度経度
     @State var targetCoordinate = CLLocationCoordinate2D()
     // 表示するマップの位置
     @State var cameraPosition: MapCameraPosition = .automatic
+    var mapStyle: MapStyle {
+        switch mapType {
+        case .standard:
+            return MapStyle.standard()
+        case .satellite:
+            return MapStyle.imagery()
+        case .hybrid:
+            return MapStyle.hybrid()
+        }
+    }
     var body: some View {
         // マップを表示
         Map(position: $cameraPosition){
@@ -21,6 +38,8 @@ struct MapView: View {
             Marker(searchKey, coordinate: targetCoordinate)
 
         }
+        // マップスタイルの指定
+        .mapStyle(mapStyle)
         .onChange(of: searchKey, initial: true) {oldValue, newValue in
             // 入力されたキーワードをデバッグエリアに表示
             print("検索キーワード:\(newValue)")
@@ -58,5 +77,5 @@ struct MapView: View {
 }
 
 #Preview {
-    MapView(searchKey: "東京駅")
+    MapView(searchKey: "東京駅", mapType: .standard)
 }
